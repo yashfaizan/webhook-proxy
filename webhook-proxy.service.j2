@@ -1,0 +1,14 @@
+[Unit]
+Description=Flask Proxy Server for bitbucket webhook
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart= /usr/bin/python3.6 "{{ webhook_proxy_directory }}/proxy_server.py"
+
+[Install]
+WantedBy=multi-user.target

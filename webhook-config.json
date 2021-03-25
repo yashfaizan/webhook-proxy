@@ -1,0 +1,27 @@
+{
+	"server_ip": "10.128.0.11",
+	"port": 5000,
+	"logfile": "/root/webhook/bitbucket-webhook.log",
+	"routes": {
+		"patch": {
+			"url": "http://10.128.0.11/api/v2/job_templates/296/launch/",
+			"credential": "tower_account",
+			"webhook_secretkey": "somesecretkey"
+		},
+		"autoconfig": {
+			"url": "http://10.128.0.11/api/v2/job_templates/296/launch/",
+			"credential": "tower_account2",
+			"webhook_secretkey": "somesecretkey"
+		}
+	},
+	"credentials": {
+		"tower_account": {
+			"url_password": "UGFzc3dvcmRAMTIzNDUh",
+			"url_username": "admin"
+		},
+		"tower_account2": {
+			"url_password": "UGFzc3dvcmRAMTIzNDUh",
+			"url_username": "admin"
+		}
+	}
+} 

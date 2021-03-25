@@ -1,0 +1,6 @@
+[linux]
+10.0.0.4
+
+[linux:vars]
+ansible_user: "ansible-postgres-primary"
+ansible_password: "Password@123"

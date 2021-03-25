@@ -1,0 +1,8 @@
+---
+- hosts: all
+  gather_facts: true
+  become: yes
+  tasks:
+    - name: "deploy proxy as a service"
+      include_role:
+        name: role_deploy_webhook_proxy

@@ -1,0 +1,61 @@
+---
+- name: "deploy | webhook proxy"
+  block:
+    - name: "delete | webhook proxy dir"
+      file:
+        path: "{{ webhook_proxy_directory }}"
+        state: absent
+
+    - name: "create | webhook proxy directory"
+      file:
+        path: "{{ webhook_proxy_directory }}"
+        state: directory
+        mode: '777'
+      register: create_dir
+
+    - name: "run | proxy"
+      block:
+        - name: "copy | files to target server"
+          template:
+            src: "{{ item }}"
+            dest: "{{ webhook_proxy_directory }}/{{ item | basename | regex_replace('\\.j2','') }}"
+          with_items:
+            - proxy_server.py
+            - webhook-config.json.j2
+            - requirements.txt
+
+        - name: "install | dependencies"
+          shell: pip3 install -r requirements.txt
+          args:
+            chdir: "{{ webhook_proxy_directory }}"
+
+        - name: "check | service file"
+          stat:
+            path: "/etc/systemd/system/webhook-proxy.service"
+          register: service_file
+            
+        - name: "delete | service file if exists"
+          file:
+            path: "/etc/systemd/service/webhook-proxy.service"
+            state: absent
+          when: service_file.stat.exists == true
+
+        - name: "create | service file"
+          template:
+            src: "{{ item }}"
+            dest: "/etc/systemd/system/{{ item | basename | regex_replace('\\.j2','') }}"
+          with_items:
+            - webhook-proxy.service.j2
+
+        - name: " start | webhook proxy service"
+          shell: |
+               systemctl start webhook-proxy
+               systemctl enable webhook-proxy
+      when: create_dir is succeeded
+      rescue:
+        - name: "delete | files"
+          file:
+            path: "{{ webhook_proxy_directory }}"
+            state: absent
+        - fail:
+            msg: "Error occured while deploying webhook proxy"
