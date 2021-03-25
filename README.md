@@ -33,7 +33,7 @@ Once the repository is cloned, all the steps should be performed within the clon
 
 #### Cloning the Repository
 ```
-git clone https://git.atosone.com/BBC/ansible-webhook-proxy.git
+git clone https://github.com/yashfaizan/webhook-proxy.git
 ```
 
 #### Configuration File
